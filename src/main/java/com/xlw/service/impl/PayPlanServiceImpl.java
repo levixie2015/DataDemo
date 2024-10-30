@@ -14,8 +14,13 @@ import com.xlw.utils.PropertiesUtils;
 import javafx.util.Pair;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,15 +36,18 @@ public class PayPlanServiceImpl implements PayPlanService {
         String sourceExcelPath = config.getProperty("payPlan.sourceExcel");//待处理的excel源文件
         String parentPath = Paths.get(sourceExcelPath).getParent().toString();
 
-        //1.获取sheet1、sheet2内容
+        //1.获取第一个sheet【付款计划打印版】中的标题
+        String contentTitle = getContentTitle(sourceExcelPath);
+
+        //2.获取sheet1、sheet2内容
         Pair<List<PayPlanModel>, List<PayPlanSupplierModel>> sheetContent = getSheetContent(sourceExcelPath);
 
-        //2.获取填充模版数据
-        Pair<String, List<PayPlanTemplateData>> pair = getTemplateDataList(sheetContent);
+        //3.获取填充模版数据
+        Pair<String, List<PayPlanTemplateData>> pair = getTemplateDataList(contentTitle, sheetContent);
 
         //3.写入excel
         String title = pair.getKey();//sheet标题
-        String targetExcelPath = parentPath + File.separator + "付款单9月.xlsx";
+        String targetExcelPath = parentPath + File.separator + contentTitle + ".xlsx";
         List<PayPlanTemplateData> templateDataList = pair.getValue();//模版填充数据集
 //        EasyExcel.write(targetExcelPath, PayPlanTemplateData.class)
 //                .sheet("付款单" + title + "月")
@@ -50,9 +58,28 @@ public class PayPlanServiceImpl implements PayPlanService {
     }
 
     /**
+     * 获取第一个sheet【付款计划打印版】中的标题
+     *
+     * @param sourceExcelPath
+     * @return
+     */
+    private String getContentTitle(String sourceExcelPath) {
+        try (FileInputStream fileInputStream = new FileInputStream(sourceExcelPath)) {
+            Workbook workbook = WorkbookFactory.create(fileInputStream);
+            Sheet sheet = workbook.getSheetAt(0);
+
+            Row row = sheet.getRow(0);
+            return row.getCell(0).toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    /**
      * 获取填充模版数据
      */
-    private Pair<String, List<PayPlanTemplateData>> getTemplateDataList(Pair<List<PayPlanModel>, List<PayPlanSupplierModel>> sheetContent) {
+    private Pair<String, List<PayPlanTemplateData>> getTemplateDataList(String contentTitle, Pair<List<PayPlanModel>, List<PayPlanSupplierModel>> sheetContent) {
         List<PayPlanModel> sheet1 = sheetContent.getKey();//付款计划打印版
         List<PayPlanSupplierModel> sheet2 = sheetContent.getValue();//供应商付款信息表
 
@@ -63,7 +90,7 @@ public class PayPlanServiceImpl implements PayPlanService {
         List<PayPlanTemplateData> resultList = new ArrayList<PayPlanTemplateData>(sheet1.size());
         for (PayPlanModel item : sheet1) {
             PayPlanTemplateData data = new PayPlanTemplateData();
-            data.setTitile(getTitle(sheet1Title));//标题
+            data.setTitile(contentTitle);//标题
             data.setSerialNo(item.getSerialNo());//编号
             data.setSupplierName(item.getSupplierName());//供应商全称
             data.setSupplierCode(item.getSupplierCode());//供应商编码
