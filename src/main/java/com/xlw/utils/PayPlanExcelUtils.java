@@ -160,7 +160,7 @@ public class PayPlanExcelUtils {
         Cell cell3 = setRowCell(sheet, currentRorw, currentRorw, 4, 4, cellStyle3, "开户行", true);
         cell3.setCellStyle(cellStyle3);
 
-        CellStyle cellStyle4 = getCellStyle(workbook, "等线", (short) 12, HorizontalAlignment.CENTER, VerticalAlignment.CENTER, false);
+        CellStyle cellStyle4 = getCellStyle(workbook, "等线", (short) 10, HorizontalAlignment.CENTER, VerticalAlignment.CENTER, false);
         Cell cell4 = setRowCell(sheet, currentRorw, currentRorw, 5, 6, cellStyle4, data.getOpeningBank(), true);
         cell4.setCellStyle(cellStyle4);
     }
@@ -187,7 +187,7 @@ public class PayPlanExcelUtils {
         cell3.setCellStyle(cellStyle3);
 
         CellStyle cellStyle4 = getCellStyle(workbook, "等线", (short) 12, HorizontalAlignment.CENTER, VerticalAlignment.CENTER, false);
-        Cell cell4 = setRowCell(sheet, currentRorw, currentRorw, 5, 6, cellStyle4, data.getAccountNo(), true);
+        Cell cell4 = setRowCell(sheet, currentRorw, currentRorw, 5, 6, cellStyle4, data.getAccountNo().replaceAll(" ", ""), true);
         cell4.setCellStyle(cellStyle4);
     }
 
@@ -230,19 +230,19 @@ public class PayPlanExcelUtils {
         cell1.setCellStyle(cellStyle1);
 
         // 设置水平居中
-        CellStyle cellStyle2 = getCellStyle(workbook, "等线", (short) 12, HorizontalAlignment.LEFT, VerticalAlignment.CENTER, false);
+        CellStyle cellStyle2 = getCellStyle(workbook, "等线", (short) 12, HorizontalAlignment.CENTER, VerticalAlignment.CENTER, false);
         Cell cell2 = setRowCell(sheet, currentRorw, currentRorw, 1, 2, cellStyle2, data.getPaymentMethod(), true);
         cell2.setCellStyle(cellStyle2);
 
-        CellStyle cellStyle3 = getCellStyle(workbook, "等线", (short) 12, HorizontalAlignment.LEFT, VerticalAlignment.CENTER, false);
+        CellStyle cellStyle3 = getCellStyle(workbook, "等线", (short) 12, HorizontalAlignment.CENTER, VerticalAlignment.CENTER, false);
         Cell cell3 = setRowCell(sheet, currentRorw, currentRorw, 3, 3, cellStyle3, data.getAmount(), true);
         cell3.setCellStyle(cellStyle3);
 
-        CellStyle cellStyle4 = getCellStyle(workbook, "等线", (short) 12, HorizontalAlignment.LEFT, VerticalAlignment.CENTER, false);
+        CellStyle cellStyle4 = getCellStyle(workbook, "等线", (short) 12, HorizontalAlignment.CENTER, VerticalAlignment.CENTER, false);
         Cell cell4 = setRowCell(sheet, currentRorw, currentRorw, 4, 4, cellStyle4, "付款单位", true);
         cell4.setCellStyle(cellStyle4);
 
-        CellStyle cellStyle5 = getCellStyle(workbook, "等线", (short) 12, HorizontalAlignment.LEFT, VerticalAlignment.CENTER, false);
+        CellStyle cellStyle5 = getCellStyle(workbook, "等线", (short) 12, HorizontalAlignment.CENTER, VerticalAlignment.CENTER, false);
         Cell cell5 = setRowCell(sheet, currentRorw, currentRorw, 5, 6, cellStyle5, data.getPayer(), true);
         cell5.setCellStyle(cellStyle5);
     }
