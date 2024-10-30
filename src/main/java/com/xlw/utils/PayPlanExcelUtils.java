@@ -1,5 +1,7 @@
 package com.xlw.utils;
 
+import cn.hutool.core.util.ObjectUtil;
+import com.alibaba.excel.util.StringUtils;
 import com.xlw.model.PayPlanTemplateData;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
@@ -68,24 +70,45 @@ public class PayPlanExcelUtils {
      */
     private static void setSecondRow(Workbook workbook, Sheet sheet, int currentData, PayPlanTemplateData data) {
         int currentRorw = currentData + 1;
-        CellStyle cellStyle = workbook.createCellStyle();
-        Font font = workbook.createFont();
-        cellStyle.setFont(font);
-
-        //创建一个字体对象并设置其属性
-        font.setFontName("微软雅黑"); // 设置字体名称
-        font.setFontHeightInPoints((short) 16); // 设置字体大小
-        font.setItalic(false); // 斜体
-        cellStyle.setFont(font);
-        // 设置水平居中
-        cellStyle.setAlignment(HorizontalAlignment.CENTER);//HorizontalAlignment.CENTER
-        // 设置垂直居中
-        cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);//VerticalAlignment.CENTER
+        CellStyle cellStyle = getCellStyle(workbook, "微软雅黑", (short) 16, HorizontalAlignment.CENTER, VerticalAlignment.CENTER, false);
         // 定义要合并的单元格范围（起始行，结束行，起始列，结束列）
         Cell cell = setRowCell(sheet, currentRorw, currentRorw, 0, 6, cellStyle, data.getTitile(), false);
 
         // 将单元格样式应用到目标单元格上
         cell.setCellStyle(cellStyle);
+    }
+
+    /**
+     * 单元格样式
+     *
+     * @param workbook
+     * @param fontName            设置字体名称
+     * @param fontHeightInPoints  设置字体名称
+     * @param horizontalAlignment 设置水平对齐方式
+     * @param verticalAlignment   设置垂直对齐方式
+     * @return
+     */
+    private static CellStyle getCellStyle(Workbook workbook, String fontName, short fontHeightInPoints, HorizontalAlignment horizontalAlignment, VerticalAlignment verticalAlignment, boolean setBorder) {
+        CellStyle cellStyle = workbook.createCellStyle();
+        if (!StringUtils.isBlank(fontName) || fontHeightInPoints != 0) {
+            Font font = workbook.createFont();
+            //创建一个字体对象并设置其属性
+            font.setFontName(fontName); // 设置字体名称
+            font.setFontHeightInPoints(fontHeightInPoints); // 设置字体名称
+            cellStyle.setFont(font);
+        }
+        if (!ObjectUtil.isEmpty(horizontalAlignment) || !ObjectUtil.isEmpty(verticalAlignment)) {
+            cellStyle.setAlignment(horizontalAlignment);// 设置水平居中
+            cellStyle.setVerticalAlignment(verticalAlignment);// 设置垂直居中
+        }
+
+        if (setBorder) {
+            cellStyle.setBorderTop(BorderStyle.THIN);//BorderStyle.THIN
+            cellStyle.setBorderLeft(BorderStyle.THIN);//BorderStyle.THIN
+            cellStyle.setBorderRight(BorderStyle.THIN);//BorderStyle.THIN
+            cellStyle.setBorderBottom(BorderStyle.THIN);//BorderStyle.THIN
+        }
+        return cellStyle;
     }
 
     /**
@@ -95,17 +118,7 @@ public class PayPlanExcelUtils {
      */
     private static void setThirdRow(Workbook workbook, Sheet sheet, int currentData, PayPlanTemplateData data) {
         int currentRorw = currentData + 2;
-        CellStyle cellStyle = workbook.createCellStyle();
-        Font font = workbook.createFont();
-        cellStyle.setFont(font);
-        //创建一个字体对象并设置其属性
-        font.setFontName("等线"); // 设置字体名称
-        font.setFontHeightInPoints((short) 12); // 设置字体大小
-        cellStyle.setFont(font);
-        // 设置水平靠右
-        cellStyle.setAlignment(HorizontalAlignment.RIGHT);//HorizontalAlignment.RIGHT
-        // 设置垂直居中
-        cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);//VerticalAlignment.CENTER
+        CellStyle cellStyle = getCellStyle(workbook, "等线", (short) 12, HorizontalAlignment.RIGHT, VerticalAlignment.CENTER, false);
 
         // 定义要合并的单元格范围（起始行，结束行，起始列，结束列）
         Cell cell = setRowCell(sheet, currentRorw, currentRorw, 0, 6, cellStyle, "编号：" + data.getSerialNo(), false);
@@ -120,8 +133,11 @@ public class PayPlanExcelUtils {
      */
     private static void setFourthRow(Workbook workbook, Sheet sheet, int currentData, PayPlanTemplateData data) {
         int currentRorw = currentData + 3;
+//        CellStyle cellStyle = getCellStyle(workbook, "等线", (short) 12, HorizontalAlignment.RIGHT, VerticalAlignment.CENTER);
         // 定义要合并的单元格范围（起始行，结束行，起始列，结束列）
-        setRowCell(sheet, currentRorw, currentRorw, 0, 6, null, "", false);
+        Cell cell = setRowCell(sheet, currentRorw, currentRorw, 0, 6, null, "", false);
+        // 将单元格样式应用到目标单元格上
+//        cell.setCellStyle(cellStyle);
     }
 
     /**
@@ -130,36 +146,23 @@ public class PayPlanExcelUtils {
      * @param sheet
      */
     private static void setFifthRow(Workbook workbook, Sheet sheet, int currentData, PayPlanTemplateData data) {
-        CellStyle cellStyle = workbook.createCellStyle();
-        Font font = workbook.createFont();
-        cellStyle.setFont(font);
-        //创建一个字体对象并设置其属性
-        font.setFontName("等线"); // 设置字体名称
-        font.setFontHeightInPoints((short) 12); // 设置字体大小
-        cellStyle.setFont(font);
-        // 设置水平居中
-        cellStyle.setAlignment(HorizontalAlignment.CENTER);//HorizontalAlignment.CENTER
-        // 设置垂直居中
-        cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);//VerticalAlignment.CENTER
-        cellStyle.setBorderTop(BorderStyle.THIN);//BorderStyle.THIN
-        cellStyle.setBorderLeft(BorderStyle.THIN);//BorderStyle.THIN
-        cellStyle.setBorderRight(BorderStyle.THIN);//BorderStyle.THIN
-        cellStyle.setBorderBottom(BorderStyle.THIN);//BorderStyle.THIN
-
         int currentRorw = currentData + 4;
         // 定义要合并的单元格范围（起始行，结束行，起始列，结束列）
-        Cell cell1 = setRowCell(sheet, currentRorw, currentRorw, 0, 0, cellStyle, "供应商全称", true);
-        cell1.setCellStyle(cellStyle);
+        CellStyle cellStyle1 = getCellStyle(workbook, "等线", (short) 12, HorizontalAlignment.LEFT, VerticalAlignment.CENTER, false);
+        Cell cell1 = setRowCell(sheet, currentRorw, currentRorw, 0, 0, cellStyle1, "供应商全称", true);
+        cell1.setCellStyle(cellStyle1);
 
-        Cell cell2 = setRowCell(sheet, currentRorw, currentRorw, 1, 3, cellStyle, data.getSupplierName(), true);
-        cell2.setCellStyle(cellStyle);
+        CellStyle cellStyle2 = getCellStyle(workbook, "等线", (short) 12, HorizontalAlignment.CENTER, VerticalAlignment.CENTER, false);
+        Cell cell2 = setRowCell(sheet, currentRorw, currentRorw, 1, 3, cellStyle2, data.getSupplierName(), true);
+        cell2.setCellStyle(cellStyle2);
 
+        CellStyle cellStyle3 = getCellStyle(workbook, "等线", (short) 12, HorizontalAlignment.CENTER, VerticalAlignment.CENTER, false);
+        Cell cell3 = setRowCell(sheet, currentRorw, currentRorw, 4, 4, cellStyle3, "开户行", true);
+        cell3.setCellStyle(cellStyle3);
 
-        Cell cell3 = setRowCell(sheet, currentRorw, currentRorw, 4, 4, cellStyle, "开户行", true);
-        cell3.setCellStyle(cellStyle);
-
-        Cell cell4 = setRowCell(sheet, currentRorw, currentRorw, 5, 6, cellStyle, data.getOpeningBank(), true);
-        cell4.setCellStyle(cellStyle);
+        CellStyle cellStyle4 = getCellStyle(workbook, "等线", (short) 12, HorizontalAlignment.CENTER, VerticalAlignment.CENTER, false);
+        Cell cell4 = setRowCell(sheet, currentRorw, currentRorw, 5, 6, cellStyle4, data.getOpeningBank(), true);
+        cell4.setCellStyle(cellStyle4);
     }
 
     /**
@@ -168,32 +171,24 @@ public class PayPlanExcelUtils {
      * @param sheet
      */
     private static void setSixthRow(Workbook workbook, Sheet sheet, int currentData, PayPlanTemplateData data) {
-        CellStyle cellStyle = workbook.createCellStyle();
-        Font font = workbook.createFont();
-        cellStyle.setFont(font);
-        //创建一个字体对象并设置其属性
-        font.setFontName("等线"); // 设置字体名称
-        font.setFontHeightInPoints((short) 12); // 设置字体大小
-        cellStyle.setFont(font);
-        // 设置水平居中
-        cellStyle.setAlignment(HorizontalAlignment.CENTER);//HorizontalAlignment.CENTER
-        // 设置垂直居中
-        cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);//VerticalAlignment.CENTER
-
-
         int currentRorw = currentData + 5;
         // 定义要合并的单元格范围（起始行，结束行，起始列，结束列）
-        Cell cell1 = setRowCell(sheet, currentRorw, currentRorw, 0, 0, cellStyle, "供应商编码", true);
-        cell1.setCellStyle(cellStyle);
+        CellStyle cellStyle1 = getCellStyle(workbook, "等线", (short) 12, HorizontalAlignment.LEFT, VerticalAlignment.CENTER, false);
+        Cell cell1 = setRowCell(sheet, currentRorw, currentRorw, 0, 0, cellStyle1, "供应商编码", true);
+        cell1.setCellStyle(cellStyle1);
 
-        Cell cell2 = setRowCell(sheet, currentRorw, currentRorw, 1, 3, cellStyle, data.getSupplierCode(), true);
-        cell2.setCellStyle(cellStyle);
+        // 设置水平居中
+        CellStyle cellStyle2 = getCellStyle(workbook, "等线", (short) 12, HorizontalAlignment.CENTER, VerticalAlignment.CENTER, false);
+        Cell cell2 = setRowCell(sheet, currentRorw, currentRorw, 1, 3, cellStyle2, data.getSupplierCode(), true);
+        cell2.setCellStyle(cellStyle2);
 
-        Cell cell3 = setRowCell(sheet, currentRorw, currentRorw, 4, 4, cellStyle, "账号", true);
-        cell3.setCellStyle(cellStyle);
+        CellStyle cellStyle3 = getCellStyle(workbook, "等线", (short) 12, HorizontalAlignment.CENTER, VerticalAlignment.CENTER, false);
+        Cell cell3 = setRowCell(sheet, currentRorw, currentRorw, 4, 4, cellStyle3, "账号", true);
+        cell3.setCellStyle(cellStyle3);
 
-        Cell cell4 = setRowCell(sheet, currentRorw, currentRorw, 5, 6, cellStyle, data.getAccountNo(), true);
-        cell4.setCellStyle(cellStyle);
+        CellStyle cellStyle4 = getCellStyle(workbook, "等线", (short) 12, HorizontalAlignment.CENTER, VerticalAlignment.CENTER, false);
+        Cell cell4 = setRowCell(sheet, currentRorw, currentRorw, 5, 6, cellStyle4, data.getAccountNo(), true);
+        cell4.setCellStyle(cellStyle4);
     }
 
     /**
@@ -202,32 +197,24 @@ public class PayPlanExcelUtils {
      * @param sheet
      */
     private static void setSeventhRow(Workbook workbook, Sheet sheet, int currentData, PayPlanTemplateData data) {
-        CellStyle cellStyle = workbook.createCellStyle();
-        Font font = workbook.createFont();
-        cellStyle.setFont(font);
-        //创建一个字体对象并设置其属性
-        font.setFontName("等线"); // 设置字体名称
-        font.setFontHeightInPoints((short) 12); // 设置字体大小
-        cellStyle.setFont(font);
-        // 设置水平居中
-        cellStyle.setAlignment(HorizontalAlignment.CENTER);//HorizontalAlignment.CENTER
-        // 设置垂直居中
-        cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);//VerticalAlignment.CENTER
-
-
         int currentRorw = currentData + 6;
         // 定义要合并的单元格范围（起始行，结束行，起始列，结束列）
-        Cell cell1 = setRowCell(sheet, currentRorw, currentRorw, 0, 0, cellStyle, "付款总额", true);
-        cell1.setCellStyle(cellStyle);
+        CellStyle cellStyle1 = getCellStyle(workbook, "等线", (short) 12, HorizontalAlignment.LEFT, VerticalAlignment.CENTER, false);
+        Cell cell1 = setRowCell(sheet, currentRorw, currentRorw, 0, 0, cellStyle1, "付款总额", true);
+        cell1.setCellStyle(cellStyle1);
 
-        Cell cell2 = setRowCell(sheet, currentRorw, currentRorw, 1, 3, cellStyle, data.getPayAmount(), true);
-        cell2.setCellStyle(cellStyle);
+        // 设置水平居中
+        CellStyle cellStyle2 = getCellStyle(workbook, "等线", (short) 12, HorizontalAlignment.CENTER, VerticalAlignment.CENTER, false);
+        Cell cell2 = setRowCell(sheet, currentRorw, currentRorw, 1, 3, cellStyle2, data.getPayAmount(), true);
+        cell2.setCellStyle(cellStyle2);
 
-        Cell cell3 = setRowCell(sheet, currentRorw, currentRorw, 4, 4, cellStyle, "行号", true);
-        cell3.setCellStyle(cellStyle);
+        CellStyle cellStyle3 = getCellStyle(workbook, "等线", (short) 12, HorizontalAlignment.CENTER, VerticalAlignment.CENTER, false);
+        Cell cell3 = setRowCell(sheet, currentRorw, currentRorw, 4, 4, cellStyle3, "行号", true);
+        cell3.setCellStyle(cellStyle3);
 
-        Cell cell4 = setRowCell(sheet, currentRorw, currentRorw, 5, 6, cellStyle, data.getOpeningBankNo(), true);
-        cell4.setCellStyle(cellStyle);
+        CellStyle cellStyle4 = getCellStyle(workbook, "等线", (short) 12, HorizontalAlignment.CENTER, VerticalAlignment.CENTER, false);
+        Cell cell4 = setRowCell(sheet, currentRorw, currentRorw, 5, 6, cellStyle4, data.getOpeningBankNo(), true);
+        cell4.setCellStyle(cellStyle4);
     }
 
     /**
@@ -236,34 +223,28 @@ public class PayPlanExcelUtils {
      * @param sheet
      */
     private static void setEighthRow(Workbook workbook, Sheet sheet, int currentData, PayPlanTemplateData data) {
-        CellStyle cellStyle = workbook.createCellStyle();
-        Font font = workbook.createFont();
-        cellStyle.setFont(font);
-        //创建一个字体对象并设置其属性
-        font.setFontName("等线"); // 设置字体名称
-        font.setFontHeightInPoints((short) 12); // 设置字体大小
-        cellStyle.setFont(font);
-        // 设置水平居中
-        cellStyle.setAlignment(HorizontalAlignment.CENTER);//HorizontalAlignment.CENTER
-        // 设置垂直居中
-        cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);//VerticalAlignment.CENTER
-
         int currentRorw = currentData + 7;
         // 定义要合并的单元格范围（起始行，结束行，起始列，结束列）
-        Cell cell1 = setRowCell(sheet, currentRorw, currentRorw, 0, 0, cellStyle, "付款方式", true);
-        cell1.setCellStyle(cellStyle);
+        CellStyle cellStyle1 = getCellStyle(workbook, "等线", (short) 12, HorizontalAlignment.LEFT, VerticalAlignment.CENTER, false);
+        Cell cell1 = setRowCell(sheet, currentRorw, currentRorw, 0, 0, cellStyle1, "付款方式", true);
+        cell1.setCellStyle(cellStyle1);
 
-        Cell cell2 = setRowCell(sheet, currentRorw, currentRorw, 1, 2, cellStyle, data.getPaymentMethod(), true);
-        cell2.setCellStyle(cellStyle);
+        // 设置水平居中
+        CellStyle cellStyle2 = getCellStyle(workbook, "等线", (short) 12, HorizontalAlignment.LEFT, VerticalAlignment.CENTER, false);
+        Cell cell2 = setRowCell(sheet, currentRorw, currentRorw, 1, 2, cellStyle2, data.getPaymentMethod(), true);
+        cell2.setCellStyle(cellStyle2);
 
-        Cell cell3 = setRowCell(sheet, currentRorw, currentRorw, 3, 3, cellStyle, data.getAmount(), true);
-        cell3.setCellStyle(cellStyle);
+        CellStyle cellStyle3 = getCellStyle(workbook, "等线", (short) 12, HorizontalAlignment.LEFT, VerticalAlignment.CENTER, false);
+        Cell cell3 = setRowCell(sheet, currentRorw, currentRorw, 3, 3, cellStyle3, data.getAmount(), true);
+        cell3.setCellStyle(cellStyle3);
 
-        Cell cell4 = setRowCell(sheet, currentRorw, currentRorw, 4, 4, cellStyle, "付款单位", true);
-        cell4.setCellStyle(cellStyle);
+        CellStyle cellStyle4 = getCellStyle(workbook, "等线", (short) 12, HorizontalAlignment.LEFT, VerticalAlignment.CENTER, false);
+        Cell cell4 = setRowCell(sheet, currentRorw, currentRorw, 4, 4, cellStyle4, "付款单位", true);
+        cell4.setCellStyle(cellStyle4);
 
-        Cell cell5 = setRowCell(sheet, currentRorw, currentRorw, 5, 6, cellStyle, data.getPayer(), true);
-        cell5.setCellStyle(cellStyle);
+        CellStyle cellStyle5 = getCellStyle(workbook, "等线", (short) 12, HorizontalAlignment.LEFT, VerticalAlignment.CENTER, false);
+        Cell cell5 = setRowCell(sheet, currentRorw, currentRorw, 5, 6, cellStyle5, data.getPayer(), true);
+        cell5.setCellStyle(cellStyle5);
     }
 
     /**
@@ -272,32 +253,24 @@ public class PayPlanExcelUtils {
      * @param sheet
      */
     private static int setNinthRow(Workbook workbook, Sheet sheet, int currentData, PayPlanTemplateData data) {
-        CellStyle cellStyle = workbook.createCellStyle();
-        Font font = workbook.createFont();
-        cellStyle.setFont(font);
-        //创建一个字体对象并设置其属性
-        font.setFontName("等线"); // 设置字体名称
-        font.setFontHeightInPoints((short) 12); // 设置字体大小
-        cellStyle.setFont(font);
-        // 设置水平居中
-        cellStyle.setAlignment(HorizontalAlignment.CENTER);//HorizontalAlignment.CENTER
-        // 设置垂直居中
-        cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);//VerticalAlignment.CENTER
-
-
         int currentRorw = currentData + 8;
         // 定义要合并的单元格范围（起始行，结束行，起始列，结束列）
-        Cell cell1 = setRowCell(sheet, currentRorw, currentRorw, 0, 0, cellStyle, "经办人", true);
-        cell1.setCellStyle(cellStyle);
+        CellStyle cellStyle1 = getCellStyle(workbook, "等线", (short) 12, HorizontalAlignment.CENTER, VerticalAlignment.CENTER, false);
+        Cell cell1 = setRowCell(sheet, currentRorw, currentRorw, 0, 0, cellStyle1, "经办人", true);
+        cell1.setCellStyle(cellStyle1);
 
-        Cell cell2 = setRowCell(sheet, currentRorw, currentRorw, 1, 3, cellStyle, data.getPaymentMethod(), true);
-        cell2.setCellStyle(cellStyle);
+        // 设置水平居中
+        CellStyle cellStyle2 = getCellStyle(workbook, "等线", (short) 12, HorizontalAlignment.CENTER, VerticalAlignment.CENTER, false);
+        Cell cell2 = setRowCell(sheet, currentRorw, currentRorw, 1, 3, cellStyle2, data.getPaymentMethod(), true);
+        cell2.setCellStyle(cellStyle2);
 
-        Cell cell3 = setRowCell(sheet, currentRorw, currentRorw, 4, 4, cellStyle, "财务", true);
-        cell3.setCellStyle(cellStyle);
+        CellStyle cellStyle3 = getCellStyle(workbook, "等线", (short) 12, HorizontalAlignment.CENTER, VerticalAlignment.CENTER, false);
+        Cell cell3 = setRowCell(sheet, currentRorw, currentRorw, 4, 4, cellStyle3, "财务", true);
+        cell3.setCellStyle(cellStyle3);
 
-        Cell cell4 = setRowCell(sheet, currentRorw, currentRorw, 5, 6, cellStyle, data.getPayer(), true);
-        cell4.setCellStyle(cellStyle);
+        CellStyle cellStyle4 = getCellStyle(workbook, "等线", (short) 12, HorizontalAlignment.CENTER, VerticalAlignment.CENTER, false);
+        Cell cell4 = setRowCell(sheet, currentRorw, currentRorw, 5, 6, cellStyle4, data.getPayer(), true);
+        cell4.setCellStyle(cellStyle4);
         return currentRorw;
     }
 
