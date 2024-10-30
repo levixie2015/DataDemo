@@ -1,9 +1,9 @@
 package com.xlw.utils;
 
-import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -13,16 +13,27 @@ public class PropertiesUtils {
     private Properties properties = new Properties();
 
     public PropertiesUtils(String propertiesFileName) {
-        try (InputStream input = getClass().getClassLoader().getResourceAsStream(propertiesFileName)) {
-            if (input == null) {
-                System.out.println("Sorry, unable to find " + propertiesFileName);
-                return;
+//        try (InputStream input = getClass().getClassLoader().getResourceAsStream(propertiesFileName)) {
+//            if (input == null) {
+//                System.out.println("Sorry, unable to find " + propertiesFileName);
+//                return;
+//            }
+//            // 使用BufferedReader和InputStreamReader来指定UTF-8编码
+//            try (BufferedReader reader = new BufferedReader(new InputStreamReader(input, "UTF-8"))) {
+//                // 从BufferedReader加载属性文件
+//                properties.load(reader);
+//            }
+//        } catch (IOException ex) {
+//            ex.printStackTrace();
+//        }
+
+        try (InputStream resourceAsStream = new FileInputStream(propertiesFileName)) {
+            properties.load(resourceAsStream);
+            System.out.println("读取配置文件：" + propertiesFileName);
+            for (Map.Entry entry : properties.entrySet()) {
+                System.out.println(entry.getKey() + "--->" + entry.getValue());
             }
-            // 使用BufferedReader和InputStreamReader来指定UTF-8编码
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(input, "UTF-8"))) {
-                // 从BufferedReader加载属性文件
-                properties.load(reader);
-            }
+            System.out.println("读取配置文件结束");
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -34,7 +45,10 @@ public class PropertiesUtils {
 
     public static void main(String[] args) {
         //payPlan.sourceExcel=/Users/xieliwei/Desktop/付款计划处理/付款单模板.xlsx
-        PropertiesUtils config = new PropertiesUtils("payPlan.properties");
+        ///Users/xieliwei/Desktop/付款计划处理/程序/payPlan.properties
+        PropertiesUtils config = new PropertiesUtils("/Users/xieliwei/Desktop/付款计划处理/程序/payPlan.properties");
+//        PropertiesUtils config = new PropertiesUtils("/payPlan.properties");
         System.out.println("payPlan.sourceExcel: " + config.getProperty("payPlan.sourceExcel"));
+
     }
 }
