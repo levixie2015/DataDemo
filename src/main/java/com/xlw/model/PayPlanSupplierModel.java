@@ -21,23 +21,18 @@ public class PayPlanSupplierModel implements Serializable {
     @ExcelProperty(value = "供应商全称", index = 1)
     private String supplierName;
     /**
-     * XXX
-     */
-    @ExcelProperty(value = "XXX", index = 2)
-    private String xxx;
-    /**
      * 开户行
      */
-    @ExcelProperty(value = "开户行", index = 3)
+    @ExcelProperty(value = "开户行", index = 2)
     private String openingBank;
     /**
      * 账号
      */
-    @ExcelProperty(value = "账号", index = 4)
+    @ExcelProperty(value = "账号", index = 3)
     private String accountNo;
     /**
      * 开户行号
      */
-    @ExcelProperty(value = "开户行号", index = 5)
+    @ExcelProperty(value = "开户行号", index = 4)
     private String openingBankNo;
 }
