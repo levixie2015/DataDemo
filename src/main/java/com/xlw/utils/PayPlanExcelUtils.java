@@ -209,7 +209,7 @@ public class PayPlanExcelUtils {
         cell1.setCellStyle(cellStyle1);
 
         // 设置水平居中
-        CellStyle cellStyle2 = getCellStyle(workbook, "等线", (short) 12, HorizontalAlignment.CENTER, VerticalAlignment.CENTER, false);
+        CellStyle cellStyle2 = getCellStyle(workbook, "等线", (short) 10, HorizontalAlignment.CENTER, VerticalAlignment.CENTER, false);
         Cell cell2 = setRowCell(sheet, currentRorw, currentRorw, 1, 3, cellStyle2, data.getPayAmount(), true);
         cell2.setCellStyle(cellStyle2);
 
