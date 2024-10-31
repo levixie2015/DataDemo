@@ -26,11 +26,15 @@ public class ExcelCopyRange {
         int startCol = 0;
         int endCol = 6;
 
-        // 定义追加到的起始位置  
-        int appendStartRow = endRow + 1 + 1;
-        int appendStartCol = startCol;
+        int numRowSpace = 1;//数据间隔
+        // 定义追加到的起始位置：第二行
+        int appendStartRow = endRow + 1 + numRowSpace + 0 * 6;
+        copyRangeWithStyles(sheet, startRow, startCol, endRow, endCol, appendStartRow, startCol);
 
-        copyRangeWithStyles(sheet, startRow, startCol, endRow, endCol, appendStartRow, appendStartCol);
+        //定义追加到的起始位置：第三行
+        int appendStartRow2 = appendStartRow + 1 + numRowSpace + 1 * 6;
+        copyRangeWithStyles(sheet, appendStartRow - 1, startCol, appendStartRow2, endCol, appendStartRow2, startCol);
+
 
         FileOutputStream fos = new FileOutputStream(outputFilePath);
         workbook.write(fos);
@@ -39,13 +43,24 @@ public class ExcelCopyRange {
         fis.close();
     }
 
+    /**
+     * 复制区域并带有样式
+     *
+     * @param sheet
+     * @param startRow       起始行
+     * @param startCol       起始列
+     * @param endRow         结束行
+     * @param endCol         结束列
+     * @param appendStartRow
+     * @param appendStartCol
+     */
     private static void copyRangeWithStyles(XSSFSheet sheet, int startRow, int startCol, int endRow, int endCol, int appendStartRow, int appendStartCol) {
         Map<Integer, XSSFCellStyle> styleMap = new HashMap<>();
 
         for (int i = startRow; i <= endRow; i++) {
             XSSFRow sourceRow = sheet.getRow(i);
-            XSSFRow destRow = sheet.createRow(appendStartRow + i - startRow);
 
+            XSSFRow destRow = sheet.createRow(appendStartRow + i - startRow);
             for (int j = startCol; j <= endCol; j++) {
                 if (sourceRow != null) {
                     XSSFCell sourceCell = sourceRow.getCell(j);
