@@ -87,12 +87,12 @@ public class PayPlanServiceImpl implements PayPlanService {
         List<PayPlanTemplateData> resultList = new ArrayList<PayPlanTemplateData>(sheet1.size());
         for (PayPlanModel item : sheet1) {
             PayPlanTemplateData data = new PayPlanTemplateData();
-            data.setTitile(contentTitle);//标题
-            data.setSerialNo(item.getSerialNo());//编号
-            data.setSupplierName(item.getSupplierName());//供应商全称
-            data.setSupplierCode(item.getSupplierCode());//供应商编码
-            data.setPayAmount(NumberChineseFormatterUtils.format(item.getPlanMonth(), true, true));//付款总额(中文)
-            data.setPaymentMethod(item.getPaymentMethod());//付款方式
+            data.setTitile(StringUtils.replaceAllBlank(contentTitle));//标题
+            data.setSerialNo(StringUtils.replaceAllBlank(item.getSerialNo()));//编号
+            data.setSupplierName(StringUtils.replaceAllBlank(item.getSupplierName()));//供应商全称
+            data.setSupplierCode(StringUtils.replaceAllBlank(item.getSupplierCode()));//供应商编码
+            data.setPayAmount(NumberChineseFormatterUtils.format(StringUtils.replaceAllBlank(item.getPlanMonth()), true, true));//付款总额(中文)
+            data.setPaymentMethod(StringUtils.replaceAllBlank(item.getPaymentMethod()));//付款方式
             data.setAmount(StringUtils.replaceAllBlank(item.getPlanMonth()));
             data.setPayer("采购中心");//付款单位
             //data.setOperator();//经办人
@@ -109,10 +109,10 @@ public class PayPlanServiceImpl implements PayPlanService {
     private void setSupplierInfo(List<PayPlanSupplierModel> sheet2, PayPlanTemplateData data) {
         for (PayPlanSupplierModel item : sheet2) {
             //根据供应商名称查找信息
-            if (Objects.equals(data.getSupplierName(), item.getSupplierName())) {
-                data.setOpeningBank(item.getOpeningBank());//开户行
-                data.setAccountNo(item.getAccountNo());//账号
-                data.setOpeningBankNo(item.getOpeningBankNo());//行号
+            if (Objects.equals(data.getSupplierName(), StringUtils.replaceAllBlank(item.getSupplierName()))) {
+                data.setOpeningBank(StringUtils.replaceAllBlank(item.getOpeningBank()));//开户行
+                data.setAccountNo(StringUtils.replaceAllBlank(item.getAccountNo()));//账号
+                data.setOpeningBankNo(StringUtils.replaceAllBlank(item.getOpeningBankNo()));//行号
             }
         }
     }
