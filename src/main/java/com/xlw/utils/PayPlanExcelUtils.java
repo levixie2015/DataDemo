@@ -27,6 +27,7 @@ public class PayPlanExcelUtils {
         //遍历数据
         for (int i = 0; i < dataList.size(); i++) {
             PayPlanTemplateData data = dataList.get(i);
+            setFirstRow0(workbook, sheet, currentRow, data);//setFirstRow0
             setFirstRow(workbook, sheet, currentRow, data);//setFirstRow
             setSecondRow(workbook, sheet, currentRow, data);//setSecondRow
             setThirdRow(workbook, sheet, currentRow, data);//setThirdRow
@@ -35,7 +36,7 @@ public class PayPlanExcelUtils {
             setSixthRow(workbook, sheet, currentRow, data);//setSixthRow
             currentRow = setSeventhRow(workbook, sheet, currentRow, data);//setSeventhRow
             if (i > 1 && i % 3 == 2) {
-                currentRow = currentRow + 1;
+                currentRow = currentRow + 2;
             } else {
                 currentRow = currentRow + 3;
             }
@@ -50,12 +51,22 @@ public class PayPlanExcelUtils {
     }
 
     /**
+     * 第0行数据：2024年10月材料付款计划
+     *
+     * @param sheet
+     */
+    private static void setFirstRow0(Workbook workbook, Sheet sheet, int currentData, PayPlanTemplateData data) {
+        int currentRorw = currentData + 0;
+        setRowCell(sheet, currentRorw, currentRorw, 0, 6, null, "", false);
+    }
+
+    /**
      * 第一行数据：2024年10月材料付款计划
      *
      * @param sheet
      */
     private static void setFirstRow(Workbook workbook, Sheet sheet, int currentData, PayPlanTemplateData data) {
-        int currentRorw = currentData + 0;
+        int currentRorw = currentData + 1;
         CellStyle cellStyle = getCellStyle(workbook, "微软雅黑", (short) 16, HorizontalAlignment.CENTER, VerticalAlignment.CENTER, false);
         // 定义要合并的单元格范围（起始行，结束行，起始列，结束列）
         Cell cell = setRowCell(sheet, currentRorw, currentRorw, 0, 6, cellStyle, data.getTitile(), false);
@@ -103,7 +114,7 @@ public class PayPlanExcelUtils {
      * @param sheet
      */
     private static void setSecondRow(Workbook workbook, Sheet sheet, int currentData, PayPlanTemplateData data) {
-        int currentRorw = currentData + 1;
+        int currentRorw = currentData + 2;
         CellStyle cellStyle = getCellStyle(workbook, "等线", (short) 12, HorizontalAlignment.RIGHT, VerticalAlignment.CENTER, false);
 
         // 定义要合并的单元格范围（起始行，结束行，起始列，结束列）
@@ -118,7 +129,7 @@ public class PayPlanExcelUtils {
      * @param sheet
      */
     private static void setThirdRow(Workbook workbook, Sheet sheet, int currentData, PayPlanTemplateData data) {
-        int currentRorw = currentData + 2;
+        int currentRorw = currentData + 3;
 
         // 定义要合并的单元格范围（起始行，结束行，起始列，结束列）
         CellStyle cellStyle1 = getCellStyle(workbook, "等线", (short) 12, HorizontalAlignment.LEFT, VerticalAlignment.CENTER, false);
@@ -146,7 +157,7 @@ public class PayPlanExcelUtils {
      * @param sheet
      */
     private static void setFourthRow(Workbook workbook, Sheet sheet, int currentData, PayPlanTemplateData data) {
-        int currentRorw = currentData + 3;
+        int currentRorw = currentData + 4;
 
         // 定义要合并的单元格范围（起始行，结束行，起始列，结束列）
         CellStyle cellStyle1 = getCellStyle(workbook, "等线", (short) 12, HorizontalAlignment.LEFT, VerticalAlignment.CENTER, false);
@@ -175,7 +186,7 @@ public class PayPlanExcelUtils {
      * @param sheet
      */
     private static void setFifthRow(Workbook workbook, Sheet sheet, int currentData, PayPlanTemplateData data) {
-        int currentRorw = currentData + 4;
+        int currentRorw = currentData + 5;
         // 定义要合并的单元格范围（起始行，结束行，起始列，结束列）
         CellStyle cellStyle1 = getCellStyle(workbook, "等线", (short) 12, HorizontalAlignment.LEFT, VerticalAlignment.CENTER, false);
         Cell cell1 = setRowCell(sheet, currentRorw, currentRorw, 0, 0, cellStyle1, "付款总额", true);
@@ -203,7 +214,7 @@ public class PayPlanExcelUtils {
      * @param sheet
      */
     private static void setSixthRow(Workbook workbook, Sheet sheet, int currentData, PayPlanTemplateData data) {
-        int currentRorw = currentData + 5;
+        int currentRorw = currentData + 6;
 
         // 定义要合并的单元格范围（起始行，结束行，起始列，结束列）
         CellStyle cellStyle1 = getCellStyle(workbook, "等线", (short) 12, HorizontalAlignment.LEFT, VerticalAlignment.CENTER, false);
@@ -236,7 +247,7 @@ public class PayPlanExcelUtils {
      * @param sheet
      */
     private static int setSeventhRow(Workbook workbook, Sheet sheet, int currentData, PayPlanTemplateData data) {
-        int currentRorw = currentData + 6;
+        int currentRorw = currentData + 7;
 
         // 定义要合并的单元格范围（起始行，结束行，起始列，结束列）
         CellStyle cellStyle1 = getCellStyle(workbook, "等线", (short) 12, HorizontalAlignment.CENTER, VerticalAlignment.CENTER, false);
@@ -259,9 +270,9 @@ public class PayPlanExcelUtils {
         sheet.getRow(currentRorw).setHeight((short) 642);
 
         //多加一行
-        setRowCell(sheet, currentRorw + 1, currentRorw + 1, 0, 6, null, "", false);
+//        setRowCell(sheet, currentRorw + 1, currentRorw + 1, 0, 6, null, "", false);
 //        setRowCell(sheet, currentRorw + 2, currentRorw + 2, 0, 6, null, "", false);
-        return currentRorw + 1;
+        return currentRorw;
     }
 
     /**
