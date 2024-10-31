@@ -108,8 +108,8 @@ public class PayPlanServiceImpl implements PayPlanService {
      */
     private void setSupplierInfo(List<PayPlanSupplierModel> sheet2, PayPlanTemplateData data) {
         for (PayPlanSupplierModel item : sheet2) {
-            //根据供应商编码查找信息
-            if (Objects.equals(data.getSupplierCode(), item.getSupplierCode())) {
+            //根据供应商名称查找信息
+            if (Objects.equals(data.getSupplierName(), item.getSupplierName())) {
                 data.setOpeningBank(item.getOpeningBank());//开户行
                 data.setAccountNo(item.getAccountNo());//账号
                 data.setOpeningBankNo(item.getOpeningBankNo());//行号
