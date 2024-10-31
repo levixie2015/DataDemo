@@ -35,9 +35,9 @@ public class PayPlanExcelUtils {
             setSixthRow(workbook, sheet, currentRow, data);//setSixthRow
             currentRow = setSeventhRow(workbook, sheet, currentRow, data);//setSeventhRow
             if (i > 1 && i % 3 == 2) {
-                currentRow = currentRow + 3;
+                currentRow = currentRow + 1;
             } else {
-                currentRow = currentRow + 4;
+                currentRow = currentRow + 3;
             }
         }
 
@@ -257,7 +257,11 @@ public class PayPlanExcelUtils {
         cell4.setCellStyle(cellStyle4);
 
         sheet.getRow(currentRorw).setHeight((short) 642);
-        return currentRorw;
+
+        //多加一行
+        setRowCell(sheet, currentRorw + 1, currentRorw + 1, 0, 6, null, "", false);
+//        setRowCell(sheet, currentRorw + 2, currentRorw + 2, 0, 6, null, "", false);
+        return currentRorw + 1;
     }
 
     /**
