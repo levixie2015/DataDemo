@@ -108,12 +108,22 @@ public class PayPlanServiceImpl implements PayPlanService {
      */
     private void setSupplierInfo(List<PayPlanSupplierModel> sheet2, PayPlanTemplateData data) {
         for (PayPlanSupplierModel item : sheet2) {
-            //根据供应商名称查找信息
-            if (Objects.equals(data.getSupplierName(), StringUtils.replaceAllBlank(item.getSupplierName()))) {
-                data.setOpeningBank(StringUtils.replaceAllBlank(item.getOpeningBank()));//开户行
-                data.setAccountNo(StringUtils.replaceAllBlank(item.getAccountNo()));//账号
-                data.setOpeningBankNo(StringUtils.replaceAllBlank(item.getOpeningBankNo()));//行号
+            //匹配供应商方式:(0-供应商编码、1-供应商名称).默认供应商编码匹配
+            String match = config.getProperty("payPlan.match");
+            if (StringUtils.isEmpty(match) || Objects.equals("0", match)) {
+                if (Objects.equals(data.getSupplierCode(), StringUtils.replaceAllBlank(item.getSupplierCode()))) {
+                    data.setOpeningBank(StringUtils.replaceAllBlank(item.getOpeningBank()));//开户行
+                    data.setAccountNo(StringUtils.replaceAllBlank(item.getAccountNo()));//账号
+                    data.setOpeningBankNo(StringUtils.replaceAllBlank(item.getOpeningBankNo()));//行号
+                }
+            } else {
+                if (Objects.equals(data.getSupplierName(), StringUtils.replaceAllBlank(item.getSupplierName()))) {
+                    data.setOpeningBank(StringUtils.replaceAllBlank(item.getOpeningBank()));//开户行
+                    data.setAccountNo(StringUtils.replaceAllBlank(item.getAccountNo()));//账号
+                    data.setOpeningBankNo(StringUtils.replaceAllBlank(item.getOpeningBankNo()));//行号
+                }
             }
+
         }
     }
 
