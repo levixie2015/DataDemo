@@ -42,9 +42,9 @@ public class PropertiesUtils {
 
     public static void main(String[] args) {
         //payPlan.sourceExcel=/Users/xieliwei/Desktop/付款计划处理/付款单模板.xlsx
-        ///Users/xieliwei/Desktop/付款计划处理/程序/payPlan.properties
-        PropertiesUtils config = new PropertiesUtils("/Users/xieliwei/Desktop/付款计划处理/程序/payPlan.properties");
-//        PropertiesUtils config = new PropertiesUtils("/payPlan.properties");
+        ///Users/xieliwei/Desktop/付款计划处理/程序/payPlan.txt
+        PropertiesUtils config = new PropertiesUtils("/Users/xieliwei/Desktop/付款计划处理/程序/payPlan.txt");
+//        PropertiesUtils config = new PropertiesUtils("/payPlan.txt");
         System.out.println("payPlan.sourceExcel: " + config.getProperty("payPlan.sourceExcel"));
 
     }
