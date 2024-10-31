@@ -6,8 +6,8 @@ import java.nio.file.Paths;
 
 public class DemoTest {
     @Test
-    public void testSay() {
-        String str = "/Users/xieliwei/Desktop/付款计划处理/付款单模板.xlsx";
+    public void testProcess() {
+        String str = "/Users/xieliwei/Desktop/付款计划处理/模版.xlsx";
         System.out.println(Paths.get(str).getParent().toString());
     }
 }

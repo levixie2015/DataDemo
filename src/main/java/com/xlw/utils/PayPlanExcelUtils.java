@@ -253,7 +253,7 @@ public class PayPlanExcelUtils {
         cell3.setCellStyle(cellStyle3);
 
         CellStyle cellStyle4 = getCellStyle(workbook, "等线", (short) 12, HorizontalAlignment.CENTER, VerticalAlignment.CENTER, false);
-        Cell cell4 = setRowCell(sheet, currentRorw, currentRorw, 5, 6, cellStyle4, data.getPayer(), true);
+        Cell cell4 = setRowCell(sheet, currentRorw, currentRorw, 5, 6, cellStyle4, data.getFinance(), true);
         cell4.setCellStyle(cellStyle4);
 
         sheet.getRow(currentRorw).setHeight((short) 642);
