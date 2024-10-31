@@ -94,7 +94,7 @@ public class PayPlanServiceImpl implements PayPlanService {
             data.setPayAmount(NumberChineseFormatterUtils.format(item.getPlanMonth(), true, true));//付款总额(中文)
             data.setPaymentMethod(item.getPaymentMethod());//付款方式
             data.setAmount(StringUtils.replaceAllBlank(item.getPlanMonth()));
-            data.setPayer("采购中心");//付款单位
+            //data.setPayer("");//付款单位
             //data.setOperator();//经办人
             //data.setFinance();//财务
             setSupplierInfo(sheet2, data);
