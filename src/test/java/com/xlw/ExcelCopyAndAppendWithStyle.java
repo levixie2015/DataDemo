@@ -6,56 +6,62 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 
 public class ExcelCopyAndAppendWithStyle {
 
     public static void main(String[] args) {
         String excelFilePath = "/Users/xieliwei/Desktop/付款计划处理/模版.xlsx";
+        doCopy(excelFilePath);
+    }
 
+    private static void doCopy(String excelFilePath) {
         try (FileInputStream fis = new FileInputStream(excelFilePath);
              Workbook workbook = new XSSFWorkbook(fis)) {
 
-            Sheet sheet = workbook.getSheetAt(0); // 获取第一个工作表
-
-            // 指定要复制的区域（例如：A1:C3）
-            int startRow = 0;
-            int endRow = 6;
-            int startCol = 0;
-            int endCol = 6;
-
-            // 获取目标开始行（追加的起始位置）
-            int appendStartRow = endRow + 1 + 1; // 加1是为了在复制区域下方留出空行（可选）
-
-            // 复制指定区域并保留样式
-            for (int row = startRow; row <= endRow; row++) {
-                Row sourceRow = sheet.getRow(row);
-                Row targetRow = sheet.createRow(appendStartRow + row - startRow);
-                copyRowStyle(sourceRow, targetRow);
-
-                if (sourceRow != null) {
-                    for (int col = startCol; col <= endCol; col++) {
-                        Cell sourceCell = sourceRow.getCell(col);
-                        Cell targetCell = targetRow.createCell(col);
-
-                        if (sourceCell != null) {
-                            copyCellValue(sourceCell, targetCell);
-                            copyCellStyle(sourceCell, targetCell, workbook);
-                        }
-                    }
-                }
-            }
+            //追加复制
+            copyAndAppendWithStyle(workbook);
 
             // 写入到文件
             try (FileOutputStream fos = new FileOutputStream(excelFilePath)) {
                 workbook.write(fos);
             }
-
-            System.out.println("指定区域已成功复制并追加到工作表中，且样式已保留。");
-
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static void copyAndAppendWithStyle(Workbook workbook) {
+        Sheet sheet = workbook.getSheetAt(0); // 获取第一个工作表
+
+        // 指定要复制的区域（例如：A1:C3）
+        int startRow = 0;
+        int endRow = 6;
+        int startCol = 0;
+        int endCol = 6;
+
+        // 获取目标开始行（追加的起始位置）
+        int appendStartRow = endRow + 1 + 1; // 加1是为了在复制区域下方留出空行（可选）
+
+        // 复制指定区域并保留样式
+        for (int row = startRow; row <= endRow; row++) {
+            Row sourceRow = sheet.getRow(row);
+            Row targetRow = sheet.createRow(appendStartRow + row - startRow);
+            copyRowStyle(sourceRow, targetRow);
+
+            if (sourceRow != null) {
+                for (int col = startCol; col <= endCol; col++) {
+                    Cell sourceCell = sourceRow.getCell(col);
+                    Cell targetCell = targetRow.createCell(col);
+
+                    if (sourceCell != null) {
+                        copyCellValue(sourceCell, targetCell);
+                        copyCellStyle(sourceCell, targetCell, workbook);
+                    }
+                }
+            }
+        }
+
+        System.out.println("指定区域已成功复制并追加到工作表中，且样式已保留。");
     }
 
     private static void copyCellValue(Cell sourceCell, Cell targetCell) {
