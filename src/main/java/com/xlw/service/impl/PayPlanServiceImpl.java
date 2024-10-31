@@ -7,10 +7,7 @@ import com.xlw.model.PayPlanModel;
 import com.xlw.model.PayPlanSupplierModel;
 import com.xlw.model.PayPlanTemplateData;
 import com.xlw.service.PayPlanService;
-import com.xlw.utils.NumberChineseFormatterUtils;
-import com.xlw.utils.NumberExtractor;
-import com.xlw.utils.PayPlanExcelUtils;
-import com.xlw.utils.PropertiesUtils;
+import com.xlw.utils.*;
 import javafx.util.Pair;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -96,7 +93,7 @@ public class PayPlanServiceImpl implements PayPlanService {
             data.setSupplierCode(item.getSupplierCode());//供应商编码
             data.setPayAmount(NumberChineseFormatterUtils.format(item.getPlanMonth(), true, true));//付款总额(中文)
             data.setPaymentMethod(item.getPaymentMethod());//付款方式
-            data.setAmount(item.getPlanMonth().replaceAll(",", ""));
+            data.setAmount(StringUtils.replaceAllBlank(item.getPlanMonth()));
             data.setPayer("采购中心");//付款单位
             //data.setOperator();//经办人
             //data.setFinance();//财务
