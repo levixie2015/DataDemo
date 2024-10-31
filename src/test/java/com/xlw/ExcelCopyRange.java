@@ -57,18 +57,18 @@ public class ExcelCopyRange {
                     }
                 }
             }
+        }
 
-            // 复制合并单元格信息
-            for (int k = 0; k < sheet.getNumMergedRegions(); k++) {
-                CellRangeAddress mergedRegion = sheet.getMergedRegion(k);
-                if (mergedRegion.getFirstRow() >= startRow && mergedRegion.getLastRow() <= endRow &&
-                        mergedRegion.getFirstColumn() >= startCol && mergedRegion.getLastColumn() <= endCol) {
-                    int newFirstRow = mergedRegion.getFirstRow() - startRow + appendStartRow;
-                    int newLastRow = mergedRegion.getLastRow() - startRow + appendStartRow;
-                    int newFirstCol = mergedRegion.getFirstColumn();
-                    int newLastCol = mergedRegion.getLastColumn();
-                    sheet.addMergedRegion(new CellRangeAddress(newFirstRow, newLastRow, newFirstCol, newLastCol));
-                }
+        // 复制合并单元格信息
+        for (int k = 0; k < sheet.getNumMergedRegions(); k++) {
+            CellRangeAddress mergedRegion = sheet.getMergedRegion(k);
+            if (mergedRegion.getFirstRow() >= startRow && mergedRegion.getLastRow() <= endRow &&
+                    mergedRegion.getFirstColumn() >= startCol && mergedRegion.getLastColumn() <= endCol) {
+                int newFirstRow = mergedRegion.getFirstRow() - startRow + appendStartRow;
+                int newLastRow = mergedRegion.getLastRow() - startRow + appendStartRow;
+                int newFirstCol = mergedRegion.getFirstColumn();
+                int newLastCol = mergedRegion.getLastColumn();
+                sheet.addMergedRegion(new CellRangeAddress(newFirstRow, newLastRow, newFirstCol, newLastCol));
             }
         }
     }
