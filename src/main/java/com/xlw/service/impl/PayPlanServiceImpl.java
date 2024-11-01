@@ -174,9 +174,9 @@ public class PayPlanServiceImpl implements PayPlanService {
         PayPlanSupplierModel additionalItem = null;
         if (!ObjectUtil.isEmpty(additionalList)) {
             if (Objects.equals("0", match)) {
-                additionalItem = additionalList.stream().filter(entity -> Objects.equals(StringUtils.replaceAllBlank(entity.getSupplierCode()), data.getSupplierCode())).findFirst().get();
+                additionalItem = additionalList.stream().filter(entity -> Objects.equals(StringUtils.replaceAllBlank(entity.getSupplierCode()), data.getSupplierCode())).findFirst().orElse(null);
             } else {
-                additionalItem = additionalList.stream().filter(entity -> Objects.equals(StringUtils.replaceAllBlank(entity.getSupplierName()), data.getSupplierName())).findFirst().get();
+                additionalItem = additionalList.stream().filter(entity -> Objects.equals(StringUtils.replaceAllBlank(entity.getSupplierName()), data.getSupplierName())).findFirst().orElse(null);
             }
         }
 
