@@ -1,5 +1,6 @@
 package com.xlw.service.impl;
 
+import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.read.listener.PageReadListener;
 import com.alibaba.excel.support.ExcelTypeEnum;
@@ -31,6 +32,22 @@ public class PayPlanServiceImpl implements PayPlanService {
     @Override
     public void parseExcel() {
         String sourceExcelPath = config.getProperty("payPlan.sourceExcel");//待处理的excel源文件
+        String additionalExcelPath = config.getProperty("payPlan.additionalExcel");//供应商信息补充文件.若配置则供应商信息优先取此处
+
+        List<PayPlanSupplierModel> additionalList = new ArrayList<PayPlanSupplierModel>();
+        if (!StringUtils.isEmpty(additionalExcelPath)) {
+            //【供应商付款信息表】
+            EasyExcel.read(additionalExcelPath, PayPlanSupplierModel.class, new PageReadListener<PayPlanSupplierModel>(dataList -> {
+                        for (PayPlanSupplierModel data : dataList) {
+                            additionalList.add(data);
+                        }
+                    })).excelType(ExcelTypeEnum.XLSX) // 指定文件类型为XLSX
+                    .sheet(1)// 选择第一个sheet
+                    .headRowNumber(1) // 设置从第2行开始读取
+                    .doRead();
+        }
+
+
         String parentPath = Paths.get(sourceExcelPath).getParent().toString();
 
         //1.获取第一个sheet【付款计划打印版】中的标题
@@ -40,7 +57,7 @@ public class PayPlanServiceImpl implements PayPlanService {
         Pair<List<PayPlanModel>, List<PayPlanSupplierModel>> sheetContent = getSheetContent(sourceExcelPath);
 
         //3.获取填充模版数据
-        Pair<String, List<PayPlanTemplateData>> pair = getTemplateDataList(contentTitle, sheetContent);
+        Pair<String, List<PayPlanTemplateData>> pair = getTemplateDataList(contentTitle, sheetContent, additionalList);
 
         //3.写入excel
         String title = pair.getKey();//sheet标题
@@ -75,8 +92,13 @@ public class PayPlanServiceImpl implements PayPlanService {
 
     /**
      * 获取填充模版数据
+     *
+     * @param contentTitle
+     * @param sheetContent
+     * @param additionalList 供应商额外补充信息
+     * @return
      */
-    private Pair<String, List<PayPlanTemplateData>> getTemplateDataList(String contentTitle, Pair<List<PayPlanModel>, List<PayPlanSupplierModel>> sheetContent) {
+    private Pair<String, List<PayPlanTemplateData>> getTemplateDataList(String contentTitle, Pair<List<PayPlanModel>, List<PayPlanSupplierModel>> sheetContent, List<PayPlanSupplierModel> additionalList) {
         List<PayPlanModel> sheet1 = sheetContent.getKey();//付款计划打印版
         List<PayPlanSupplierModel> sheet2 = sheetContent.getValue();//供应商付款信息表
 
@@ -97,7 +119,7 @@ public class PayPlanServiceImpl implements PayPlanService {
             data.setPayer("采购中心");//付款单位
             //data.setOperator();//经办人
             //data.setFinance();//财务
-            setSupplierInfo(sheet2, data);
+            setSupplierInfo(sheet2, data, additionalList);
             resultList.add(data);
         }
         return new Pair<>(getTitle(sheet1Title), resultList);
@@ -105,26 +127,49 @@ public class PayPlanServiceImpl implements PayPlanService {
 
     /**
      * 设置供应商信息
+     *
+     * @param sheet2         供应商信息
+     * @param data           最终导出数据
+     * @param additionalList 供应商额外补充信息
      */
-    private void setSupplierInfo(List<PayPlanSupplierModel> sheet2, PayPlanTemplateData data) {
+    private void setSupplierInfo(List<PayPlanSupplierModel> sheet2, PayPlanTemplateData data, List<PayPlanSupplierModel> additionalList) {
         for (PayPlanSupplierModel item : sheet2) {
             //匹配供应商方式:(0-供应商编码、1-供应商名称).默认供应商编码匹配
             String match = config.getProperty("payPlan.match");
-            if (StringUtils.isEmpty(match) || Objects.equals("0", match)) {
+            if (StringUtils.isEmpty(match)) {
+                match = "0";
+            }
+            if (Objects.equals("0", match)) {
                 if (Objects.equals(data.getSupplierCode(), StringUtils.replaceAllBlank(item.getSupplierCode()))) {
-                    data.setOpeningBank(StringUtils.replaceAllBlank(item.getOpeningBank()));//开户行
-                    data.setAccountNo(StringUtils.replaceAllBlank(item.getAccountNo()));//账号
-                    data.setOpeningBankNo(StringUtils.replaceAllBlank(item.getOpeningBankNo()));//行号
+                    doSetData(data, item, additionalList, match);
                 }
             } else {
                 if (Objects.equals(data.getSupplierName(), StringUtils.replaceAllBlank(item.getSupplierName()))) {
-                    data.setOpeningBank(StringUtils.replaceAllBlank(item.getOpeningBank()));//开户行
-                    data.setAccountNo(StringUtils.replaceAllBlank(item.getAccountNo()));//账号
-                    data.setOpeningBankNo(StringUtils.replaceAllBlank(item.getOpeningBankNo()));//行号
+                    doSetData(data, item, additionalList, match);
                 }
             }
 
         }
+    }
+
+    /**
+     * 设置数据
+     *
+     * @param data  最终导出数据
+     * @param item  供应商信息
+     * @param match 匹配供应商方式:(0-供应商编码、1-供应商名称).默认供应商编码匹配
+     */
+    private void doSetData(PayPlanTemplateData data, PayPlanSupplierModel item, List<PayPlanSupplierModel> additionalList, String match) {
+        if (!ObjectUtil.isEmpty(additionalList)) {
+            if (Objects.equals("0", match)) {
+                item = additionalList.stream().filter(entity -> Objects.equals(StringUtils.replaceAllBlank(entity.getSupplierCode()), data.getSupplierCode())).findFirst().get();
+            } else {
+                item = additionalList.stream().filter(entity -> Objects.equals(StringUtils.replaceAllBlank(entity.getSupplierName()), data.getSupplierName())).findFirst().get();
+            }
+        }
+        data.setOpeningBank(StringUtils.replaceAllBlank(item.getOpeningBank()));//开户行
+        data.setAccountNo(StringUtils.replaceAllBlank(item.getAccountNo()));//账号
+        data.setOpeningBankNo(StringUtils.replaceAllBlank(item.getOpeningBankNo()));//行号
     }
 
     /**
