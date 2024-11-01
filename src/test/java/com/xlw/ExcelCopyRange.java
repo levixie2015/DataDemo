@@ -35,6 +35,10 @@ public class ExcelCopyRange {
         int appendStartRow2 = appendStartRow + 1 + numRowSpace + 1 * 6;
         copyRangeWithStyles(sheet, appendStartRow - 1, startCol, appendStartRow2, endCol, appendStartRow2, startCol);
 
+        //定义追加到的起始位置：第四行
+        int appendStartRow3 = appendStartRow2 + 1 + numRowSpace + 2 * 6;
+        copyRangeWithStyles(sheet, appendStartRow2 - 1, startCol, appendStartRow3, endCol, appendStartRow3, startCol);
+
 
         FileOutputStream fos = new FileOutputStream(outputFilePath);
         workbook.write(fos);
