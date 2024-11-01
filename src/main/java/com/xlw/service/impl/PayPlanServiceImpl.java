@@ -42,7 +42,7 @@ public class PayPlanServiceImpl implements PayPlanService {
                             additionalList.add(data);
                         }
                     })).excelType(ExcelTypeEnum.XLSX) // 指定文件类型为XLSX
-                    .sheet(1)// 选择第一个sheet
+                    .sheet(0)// 选择第一个sheet
                     .headRowNumber(1) // 设置从第2行开始读取
                     .doRead();
         }
