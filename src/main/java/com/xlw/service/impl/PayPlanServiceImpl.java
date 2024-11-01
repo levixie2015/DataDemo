@@ -34,8 +34,18 @@ public class PayPlanServiceImpl implements PayPlanService {
         String sourceExcelPath = config.getProperty("payPlan.sourceExcel");//待处理的excel源文件
         String additionalExcelPath = config.getProperty("payPlan.additionalExcel");//供应商信息补充文件.若配置则供应商信息优先取此处
 
+        //匹配供应商方式:(0-供应商编码、1-供应商名称).默认供应商编码匹配
+        String match = config.getProperty("payPlan.match");
+        if (StringUtils.isEmpty(match) || Objects.equals("0", match)) {
+            System.out.println("根据供应商编码匹配信息");
+        } else {
+            System.out.println("根据供应商名称匹配信息");
+        }
+
         List<PayPlanSupplierModel> additionalList = new ArrayList<PayPlanSupplierModel>();
         if (!StringUtils.isEmpty(additionalExcelPath)) {
+            System.out.println("已配置【供应商信息补充文件】: " + additionalExcelPath);
+            System.out.println("优先从【供应商信息补充文件】取供应商信息");
             //【供应商付款信息表】
             EasyExcel.read(additionalExcelPath, PayPlanSupplierModel.class, new PageReadListener<PayPlanSupplierModel>(dataList -> {
                         for (PayPlanSupplierModel data : dataList) {
@@ -45,8 +55,9 @@ public class PayPlanServiceImpl implements PayPlanService {
                     .sheet(0)// 选择第一个sheet
                     .headRowNumber(1) // 设置从第2行开始读取
                     .doRead();
+        } else {
+            System.out.println("未配置【供应商信息补充文件】: " + additionalExcelPath);
         }
-
 
         String parentPath = Paths.get(sourceExcelPath).getParent().toString();
 
