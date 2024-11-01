@@ -56,7 +56,7 @@ public class PayPlanServiceImpl implements PayPlanService {
                     .headRowNumber(1) // 设置从第2行开始读取
                     .doRead();
         } else {
-            System.out.println("未配置【供应商信息补充文件】: " + additionalExcelPath);
+            System.out.println("未配置【供应商信息补充文件");
         }
 
         String parentPath = Paths.get(sourceExcelPath).getParent().toString();
