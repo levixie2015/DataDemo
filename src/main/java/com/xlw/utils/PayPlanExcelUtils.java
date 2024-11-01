@@ -145,6 +145,7 @@ public class PayPlanExcelUtils {
         cell3.setCellStyle(cellStyle3);
 
         CellStyle cellStyle4 = getCellStyle(workbook, "等线", (short) 10, HorizontalAlignment.CENTER, VerticalAlignment.CENTER, false);
+        cellStyle4.setWrapText(true);//启用自动换行
         Cell cell4 = setRowCell(sheet, currentRorw, currentRorw, 5, 6, cellStyle4, data.getOpeningBank(), true);
         cell4.setCellStyle(cellStyle4);
 
