@@ -171,13 +171,19 @@ public class PayPlanServiceImpl implements PayPlanService {
      * @param match 匹配供应商方式:(0-供应商编码、1-供应商名称).默认供应商编码匹配
      */
     private void doSetData(PayPlanTemplateData data, PayPlanSupplierModel item, List<PayPlanSupplierModel> additionalList, String match) {
+        PayPlanSupplierModel additionalItem = null;
         if (!ObjectUtil.isEmpty(additionalList)) {
             if (Objects.equals("0", match)) {
-                item = additionalList.stream().filter(entity -> Objects.equals(StringUtils.replaceAllBlank(entity.getSupplierCode()), data.getSupplierCode())).findFirst().get();
+                additionalItem = additionalList.stream().filter(entity -> Objects.equals(StringUtils.replaceAllBlank(entity.getSupplierCode()), data.getSupplierCode())).findFirst().get();
             } else {
-                item = additionalList.stream().filter(entity -> Objects.equals(StringUtils.replaceAllBlank(entity.getSupplierName()), data.getSupplierName())).findFirst().get();
+                additionalItem = additionalList.stream().filter(entity -> Objects.equals(StringUtils.replaceAllBlank(entity.getSupplierName()), data.getSupplierName())).findFirst().get();
             }
         }
+
+        if (additionalItem != null) {
+            item = additionalItem;
+        }
+
         data.setOpeningBank(StringUtils.replaceAllBlank(item.getOpeningBank()));//开户行
         data.setAccountNo(StringUtils.replaceAllBlank(item.getAccountNo()));//账号
         data.setOpeningBankNo(StringUtils.replaceAllBlank(item.getOpeningBankNo()));//行号
