@@ -80,6 +80,7 @@ public class PayPlanServiceImpl implements PayPlanService {
 //                .doWrite(templateDataList);
 
         PayPlanExcelUtils.write(templateDataList, "付款单" + title + "月", targetExcelPath);
+        System.out.println("文件处理完成." + targetExcelPath);
     }
 
     /**
